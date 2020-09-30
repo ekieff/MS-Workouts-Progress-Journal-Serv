@@ -1,54 +1,27 @@
-require('dotenv').config();
-const express = require('express');
-const layouts = require('express-ejs-layouts');
-const app = express();
-const session = require('express-session');
-const SECRET_SESSION = process.env.SECRET_SESSION;
-const passport = require('./config/ppConfig');
-const flash = require('connect-flash');
+require("dotenv").config();
+var express = require("express");
+var cors = require("cors");
+var bodyParser = require("body-parser");
+var app = express();
+var port = process.env.PORT || 3600;
 
-//require the authroization middleware at the top of the page
-const isLoggedIn = require('./middleware/isLoggedIn');
-const db = require('./models');
+app.use(bodyParser.json());
+app.use(cors());
+app.use(
+  bodyParser.urlencoded({
+    extended: false,
+  })
+);
 
+app.use('/api/users', require('./routes/api/users'))
+app.use('/exercises/playlist', require('./routes/exercises/playlist'))
 
-app.set('view engine', 'ejs');
-app.use(require('morgan')('dev'));
-app.use(express.urlencoded({ extended: false }));
-app.use(express.static(__dirname + '/public'));
-app.use(layouts);
-
-// secret: what we actually giving the client to use our site/session cookie
-// resave: Save the session even if it's modified, make this false
-// saveUninitialized: if we have a new session, we'll save it, therefore,
-// setting this to true
-
-app.use(session({
-  secret: SECRET_SESSION,
-  resave: false,
-  saveUninitialized: true
-}))
-
-// initialize passport and run session as middleware
-app.use(passport.initialize());
-app.use(passport.session());
-
-//flash for temporary messages to the user (like error messages)
-app.use(flash());
-
-//middleware to have our messages accessible for every view
-app.use((req, res, next) =>{
-  //before every route we will attach our user to res.local
-  res.locals.alerts = req.flash();
-  res.locals.currentUser = req.user;
-  next();
+app.listen(port, function () {
+  console.log("Server is running on port: " + port);
 });
 
+app.get('/test', (req, res) => {
+    res.json({ msg: 'User endpoint OK'});
+  });
 
 
-const port = process.env.PORT || 3600;
-const server = app.listen(port, () => {
-  console.log(`🎧 You're listening to the smooth sounds of port ${port} 🎧`);
-});
-
-module.exports = server;
