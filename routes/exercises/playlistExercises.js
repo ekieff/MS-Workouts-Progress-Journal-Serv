@@ -42,11 +42,15 @@ router.delete('/delete', (req,res) =>{
 
 //get route to view the connections of a particular playlist
 router.get('/show', (req, res) =>{
-    db.playlistExercises.findAll({
+    db.playlist.findAll({
+        include:[{
+            model:db.exercise, as: 'exercises'
+        }],
         where: {
-            playlistId: req.body.playlistId
+            id: req.body.playlistId
         }
-    }).then(exercises =>{
+        
+    }).then((exercises) =>{
         res.send(exercises)
     }).catch(err =>{
         res.status(400).json({ error: err})
