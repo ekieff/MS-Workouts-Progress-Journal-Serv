@@ -15,6 +15,8 @@ app.use(
 
 app.use('/api/users', require('./routes/api/users'))
 app.use('/exercises/playlist', require('./routes/exercises/playlist'))
+app.use('/exercises/exercise', require('./routes/exercises/exercise'))
+app.use('/exercises/playlistExercises', require('./routes/exercises/playlistExercises'))
 
 app.listen(port, function () {
   console.log("Server is running on port: " + port);

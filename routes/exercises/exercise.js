@@ -7,49 +7,48 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const JWT_SECRET = process.env.JWT_SECRET;
 const db = require('../../models');
-const { runInNewContext } = require('vm');
 
 router.get('/test', (req, res) => {
     res.json({ msg: 'User endpoint OK'});
   });
 
+router.get('/all', (req,res) =>{
+    console.log('Lets see some stuff')
+    db.exercise.findAll()
+    .then(exercise =>{
+        res.send(exercise)
+    })
+})
+
 router.post('/new', (req,res) =>{
     console.log('Here is the info arriving at the backend for new', req.body)
-    const newPlaylist = {
-        name: req.body.name,
-        exerciseId: req.body.exercise
+    const newExercise = {
+        exerciseTitle: req.body.exerciseTitle,
+        type: req.body.type,
+        videoAddress: req.body.videoAddress
     }
-    db.playlist.findOne({
+    db.exercise.findOne({
         where: {
-            name: req.body.name,
+            exerciseTitle: req.body.exerciseTitle,
         }
     })
-    .then(playlist =>{
-        if(!playlist){
-            db.playlist.create(newPlaylist)
-            .then(playlist =>{
-                res.json({ status: playlist.name + 'Created!' })
+    .then(exercise =>{
+        if(!exercise){
+            db.exercise.create(newExercise)
+            .then(exercise =>{
+                res.json({ status: exercise.exerciseTitle + 'Created!' })
             })
             .catch(err =>{
                 res.send('error: ' + err)
             })
         } else {
-            res.json({ error: 'That playlist already exists!'})
+            res.json({ error: 'That exercise already exists!'})
         }
     })
     .catch(err => {
         res.send('error: ' +err)
     })
 })
-
-router.get('/all', (req,res) =>{
-    console.log('What we looking for fam?')
-    db.playlist.findAll()
-    .then(playlist =>{
-        res.send(playlist)
-    })
-})
-
 
 
 module.exports = router;
