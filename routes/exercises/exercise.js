@@ -50,5 +50,18 @@ router.post('/new', (req,res) =>{
     })
 })
 
+router.post('/show', (req, res) =>{
+    db.exercise.findOne({
+        where:{
+            id: req.body.exerciseId
+        }
+    }).then(exercise =>{
+        console.log(exercise)
+        res.send(exercise)
+    }).catch(err =>{
+        res.send('error: ' +err)
+    })
+})
+
 
 module.exports = router;

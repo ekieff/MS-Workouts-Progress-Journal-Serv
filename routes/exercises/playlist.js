@@ -16,8 +16,7 @@ router.get('/test', (req, res) => {
 router.post('/new', (req,res) =>{
     console.log('Here is the info arriving at the backend for new', req.body)
     const newPlaylist = {
-        name: req.body.name,
-        exerciseId: req.body.exercise
+        name: req.body.name
     }
     db.playlist.findOne({
         where: {
@@ -46,6 +45,7 @@ router.get('/all', (req,res) =>{
     console.log('What we looking for fam?')
     db.playlist.findAll()
     .then(playlist =>{
+        console.log(playlist)
         res.send(playlist)
     })
 })

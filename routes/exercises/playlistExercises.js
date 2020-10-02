@@ -11,7 +11,7 @@ const { runInNewContext } = require('vm');
 const exercise = require('../../models/exercise');
 
 router.get('/test', (req, res) => {
-    res.json({ msg: 'User endpoint OK'});
+    console.log({ msg: 'User endpoint OK'});
   });
 //not a findone or create, because a playlist may have multiple exercises
 router.post('/new', (req, res) =>{
@@ -41,7 +41,8 @@ router.delete('/delete', (req,res) =>{
 })
 
 //get route to view the connections of a particular playlist
-router.get('/show', (req, res) =>{
+router.post("/show", (req, res) =>{
+    console.log(req.body)
     db.playlist.findAll({
         include:[{
             model:db.exercise, as: 'exercises'
@@ -51,6 +52,7 @@ router.get('/show', (req, res) =>{
         }
         
     }).then((exercises) =>{
+        console.log(exercises)
         res.send(exercises)
     }).catch(err =>{
         res.status(400).json({ error: err})
