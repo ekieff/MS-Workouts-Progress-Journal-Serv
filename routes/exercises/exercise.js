@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const JWT_SECRET = process.env.JWT_SECRET;
 const db = require('../../models');
+const { runInNewContext } = require('vm');
 
 router.get('/test', (req, res) => {
     res.json({ msg: 'User endpoint OK'});
@@ -17,6 +18,18 @@ router.get('/all', (req,res) =>{
     db.exercise.findAll()
     .then(exercise =>{
         res.send(exercise)
+    })
+})
+
+router.post('/delete', (req,res) =>{
+    db.exercise.destroy({
+        where:{
+            id: req.body.exerciseId
+        }
+    }).then(exercise =>{
+        res.json({status: exercise + 'destroyed'})
+    }).catch(err =>{
+        res.send('error ' +err)
     })
 })
 
@@ -60,6 +73,21 @@ router.post('/show', (req, res) =>{
         res.send(exercise)
     }).catch(err =>{
         res.send('error: ' +err)
+    })
+})
+
+router.post('/update', (req, res) =>{
+    console.log(req.body)
+    db.exercise.update(
+    { exerciseTitle: req.body.exercise.exerciseTitle,
+        type: req.body.exercise.type,
+        videoAddress: req.body.videoAddress },
+    {where: {id: req.body.id}}
+    )
+    .then(exercise =>{
+        res.send(exercise)
+    }).catch(err =>{
+        res.send('error: '+err)
     })
 })
 

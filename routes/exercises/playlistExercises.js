@@ -15,6 +15,7 @@ router.get('/test', (req, res) => {
   });
 //not a findone or create, because a playlist may have multiple exercises
 router.post('/new', (req, res) =>{
+    console.log(req.body)
     db.playlistExercises.create({
         playlistId:req.body.playlistId,
         exerciseId: req.body.exerciseId
@@ -30,8 +31,8 @@ router.post('/new', (req, res) =>{
 router.delete('/delete', (req,res) =>{
     db.playlistExercises.destroy({
         where:{
-            playlistId:req.body.playlistId,
-            exerciseId:req.body.exerciseId
+            playlistId:req.body.deleteExercise.playlistId,
+            exerciseId:req.body.deleteExercise.exerciseId
         }
     }).then(playlistExercise =>{
         res.json({status: playlistExercise + 'destroyed'})
