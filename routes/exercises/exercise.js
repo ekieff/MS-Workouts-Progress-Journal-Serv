@@ -22,9 +22,10 @@ router.get('/all', (req,res) =>{
 })
 
 router.post('/delete', (req,res) =>{
+    console.log(req.body)
     db.exercise.destroy({
         where:{
-            id: req.body.exerciseId
+            id: req.body.exerciseId.ExerciseId
         }
     }).then(exercise =>{
         res.json({status: exercise + 'destroyed'})
@@ -36,13 +37,13 @@ router.post('/delete', (req,res) =>{
 router.post('/new', (req,res) =>{
     console.log('Here is the info arriving at the backend for new', req.body)
     const newExercise = {
-        exerciseTitle: req.body.exerciseTitle,
-        type: req.body.type,
-        videoAddress: req.body.videoAddress
+        exerciseTitle: req.body.newExercise.exerciseTitle,
+        type: req.body.newExercise.type,
+        videoAddress: req.body.newExercise.videoAddress
     }
     db.exercise.findOne({
         where: {
-            exerciseTitle: req.body.exerciseTitle,
+            exerciseTitle: req.body.newExercise.exerciseTitle,
         }
     })
     .then(exercise =>{

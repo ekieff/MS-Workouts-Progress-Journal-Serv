@@ -28,7 +28,8 @@ router.post('/new', (req, res) =>{
     })
 })
 
-router.delete('/delete', (req,res) =>{
+router.post('/delete', (req,res) =>{
+    console.log(req.body)
     db.playlistExercises.destroy({
         where:{
             playlistId:req.body.deleteExercise.playlistId,

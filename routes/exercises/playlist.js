@@ -50,6 +50,16 @@ router.get('/all', (req,res) =>{
     })
 })
 
+router.post('/delete', (req, res) =>{
+    console.log(req.body)
+    db.playlist.destroy({
+        where: {id: req.body.playlistId.playlistId}
+    }).then(playlist =>{
+        console.log(playlist)
+    }).catch(err =>{
+        res.send('error ' +err)
+    })
+})
 
 
 module.exports = router;
