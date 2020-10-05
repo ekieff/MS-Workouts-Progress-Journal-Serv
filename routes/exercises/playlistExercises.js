@@ -43,7 +43,6 @@ router.delete('/delete', (req,res) =>{
 
 //get route to view the connections of a particular playlist
 router.post("/show", (req, res) =>{
-    console.log(req.body)
     db.playlist.findAll({
         include:[{
             model:db.exercise, as: 'exercises'
@@ -52,12 +51,42 @@ router.post("/show", (req, res) =>{
             id: req.body.playlistId
         }
         
-    }).then((exercises) =>{
-        console.log(exercises)
-        res.send(exercises)
-    }).catch(err =>{
-        res.status(400).json({ error: err})
-    })
-})
+    }).then(exercises =>{
+        if (exercises[0].exercises[0]){
+            exerciseList = []
+            for (i=0; i<(exercises.length); i++){
+                eachExercise = {
+                    id: exercises[0].get().exercises[i].get().id,
+                    exerciseTitle: exercises[0].get().exercises[i].get().exerciseTitle
+                }
+                exerciseList.push(eachExercise)
+        }
+            const playlistObject = {
+                playlistName: exercises[0].get().name,
+                exerciseList: exerciseList
+            }
+            console.log(playlistObject)
+            res.send(playlistObject)
+        }else{
+                exerciseList = []
+                eachExercise ={
+                        id: '',
+                        exerciseTitle: 'Sorry there are not any exercises right now'
+                    }
+                exerciseList.push(eachExercise)
+                const playlistObject = {
+                    playlistName: exercises[0].get().name,
+                    exerciseList: exerciseList
+                }
+                console.log(playlistObject)
+                res.send(playlistObject) 
+            }
+        })
+        .catch((err) =>{
+            res.send('error ' +err)
+        })
+        })
+
+
 
 module.exports = router;
