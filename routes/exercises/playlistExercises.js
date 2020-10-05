@@ -53,9 +53,10 @@ router.post("/show", (req, res) =>{
         }
         
     }).then(exercises =>{
+        console.log('----------------'+([exercises.exercises].length))
         if (exercises[0].exercises[0]){
             exerciseList = []
-            for (i=0; i<(exercises.length); i++){
+            for (i=0; i<(exercises[0].exercises.length); i++){
                 eachExercise = {
                     id: exercises[0].get().exercises[i].get().id,
                     exerciseTitle: exercises[0].get().exercises[i].get().exerciseTitle
