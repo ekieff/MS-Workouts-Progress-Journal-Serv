@@ -16,14 +16,22 @@ router.get('/test', (req, res) => {
 //not a findone or create, because a playlist may have multiple exercises
 router.post('/new', (req, res) =>{
     console.log(req.body)
-    db.playlistExercises.create({
-        playlistId:req.body.playlistId,
-        exerciseId: req.body.exerciseId
-    })
-    .then(playlist =>{
-        res.json({ status: playlist + 'created'})
-    })
-    .catch(err =>{
+    db.playlist.findOne({
+        where: {
+            name: req.body.playlistId
+        }
+    }).then(playlist =>{
+        db.playlistExercises.create({
+            playlistId:playlist.id,
+            exerciseId: req.body.exerciseId
+        })
+        .then(playlist =>{
+            res.json({ status: playlist + 'created'})
+        })
+        .catch(err =>{
+            res.send('error: ' +err)
+        })
+    }).catch(err =>{
         res.send('error: ' +err)
     })
 })
